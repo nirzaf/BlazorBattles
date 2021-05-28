@@ -23,8 +23,8 @@ namespace BlazorBattles.Server.Services
 
         public async Task<User> GetUser()
         {
-            var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            int userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             return user;
         }
     }

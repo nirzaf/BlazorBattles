@@ -80,10 +80,10 @@ namespace BlazorBattles.Server.Controllers
             int randomAttackerIndex = new Random().Next(attackerArmy.Count);
             int randomOpponentIndex = new Random().Next(opponentArmy.Count);
 
-            var randomAttacker = attackerArmy[randomAttackerIndex];
-            var randomOpponent = opponentArmy[randomOpponentIndex];
+            UserUnit randomAttacker = attackerArmy[randomAttackerIndex];
+            UserUnit randomOpponent = opponentArmy[randomOpponentIndex];
 
-            var damage =
+            int damage =
                 new Random().Next(randomAttacker.Unit.Attack) - new Random().Next(randomOpponent.Unit.Defense);
             if (damage < 0) damage = 0;
 
