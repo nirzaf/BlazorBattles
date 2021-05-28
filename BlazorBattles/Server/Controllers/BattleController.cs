@@ -75,7 +75,7 @@ namespace BlazorBattles.Server.Controllers
         }
 
         private int FightRound(User attacker, User opponent,
-            List<UserUnit> attackerArmy, List<UserUnit> opponentArmy, BattleResult result)
+            IReadOnlyList<UserUnit> attackerArmy, List<UserUnit> opponentArmy, BattleResult result)
         {
             int randomAttackerIndex = new Random().Next(attackerArmy.Count);
             int randomOpponentIndex = new Random().Next(opponentArmy.Count);
