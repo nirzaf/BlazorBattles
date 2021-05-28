@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using BlazorBattles.Server.Data;
 using BlazorBattles.Server.Services;
 using BlazorBattles.Shared;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,7 +51,7 @@ namespace BlazorBattles.Server.Controllers
                 .ThenBy(u => u.DateCreated)
                 .ToList();
 
-            int rank = 1;
+            var rank = 1;
             var response = users.Select(
                 user => new UserStatistic
                 {

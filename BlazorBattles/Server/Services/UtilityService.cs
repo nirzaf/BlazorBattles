@@ -1,12 +1,9 @@
-﻿using BlazorBattles.Server.Data;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using BlazorBattles.Server.Data;
 using BlazorBattles.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace BlazorBattles.Server.Services
 {
@@ -23,8 +20,8 @@ namespace BlazorBattles.Server.Services
 
         public async Task<User> GetUser()
         {
-            int userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            User user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var userId = int.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             return user;
         }
     }

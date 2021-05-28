@@ -1,8 +1,7 @@
-﻿using BlazorBattles.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using BlazorBattles.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,7 +11,7 @@ namespace BlazorBattles.Server.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        private static readonly string[] Summaries =
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
@@ -29,12 +28,12 @@ namespace BlazorBattles.Server.Controllers
         {
             var rng = new Random();
             return Enumerable.Range(1, 7).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = rng.Next(-20, 55),
+                    Summary = Summaries[rng.Next(Summaries.Length)]
+                })
+                .ToArray();
         }
     }
 }

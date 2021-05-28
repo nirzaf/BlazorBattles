@@ -6,7 +6,6 @@ using BlazorBattles.Server.Data;
 using BlazorBattles.Server.Services;
 using BlazorBattles.Shared;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,10 +30,7 @@ namespace BlazorBattles.Server.Controllers
         {
             var attacker = await _utilityService.GetUser();
             var opponent = await _context.Users.FindAsync(opponentId);
-            if (opponent == null || opponent.IsDeleted)
-            {
-                return NotFound("Opponent not available.");
-            }
+            if (opponent == null || opponent.IsDeleted) return NotFound("Opponent not available.");
 
             var result = new BattleResult();
             await Fight(attacker, opponent, result);
@@ -56,7 +52,7 @@ namespace BlazorBattles.Server.Controllers
             var attackerDamageSum = 0;
             var opponentDamageSum = 0;
 
-            int currentRound = 0;
+            var currentRound = 0;
             while (attackerArmy.Count > 0 && opponentArmy.Count > 0)
             {
                 currentRound++;
@@ -77,13 +73,13 @@ namespace BlazorBattles.Server.Controllers
         private int FightRound(User attacker, User opponent,
             IReadOnlyList<UserUnit> attackerArmy, List<UserUnit> opponentArmy, BattleResult result)
         {
-            int randomAttackerIndex = new Random().Next(attackerArmy.Count);
-            int randomOpponentIndex = new Random().Next(opponentArmy.Count);
+            var randomAttackerIndex = new Random().Next(attackerArmy.Count);
+            var randomOpponentIndex = new Random().Next(opponentArmy.Count);
 
-            UserUnit randomAttacker = attackerArmy[randomAttackerIndex];
-            UserUnit randomOpponent = opponentArmy[randomOpponentIndex];
+            var randomAttacker = attackerArmy[randomAttackerIndex];
+            var randomOpponent = opponentArmy[randomOpponentIndex];
 
-            int damage =
+            var damage =
                 new Random().Next(randomAttacker.Unit.Attack) - new Random().Next(randomOpponent.Unit.Defense);
             if (damage < 0) damage = 0;
 
@@ -95,16 +91,14 @@ namespace BlazorBattles.Server.Controllers
                     $"{opponent.Username}'s {randomOpponent.Unit.Title} with {damage} damage.");
                 return damage;
             }
-            else
-            {
-                damage = randomOpponent.HitPoints;
-                randomOpponent.HitPoints = 0;
-                opponentArmy.Remove(randomOpponent);
-                result.Log.Add(
-                    $"{attacker.Username}'s {randomAttacker.Unit.Title} kills " +
-                    $"{opponent.Username}'s {randomOpponent.Unit.Title}!");
-                return damage;
-            }
+
+            damage = randomOpponent.HitPoints;
+            randomOpponent.HitPoints = 0;
+            opponentArmy.Remove(randomOpponent);
+            result.Log.Add(
+                $"{attacker.Username}'s {randomAttacker.Unit.Title} kills " +
+                $"{opponent.Username}'s {randomOpponent.Unit.Title}!");
+            return damage;
         }
 
         private async Task FinishFight(User attacker, User opponent, BattleResult result,

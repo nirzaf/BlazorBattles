@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BlazorBattles.Server.Data;
 using BlazorBattles.Server.Services;
 using BlazorBattles.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,16 +25,13 @@ namespace BlazorBattles.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> BuildUserUnit([FromBody] int unitId)
         {
-            var unit = await _context.Units.FirstOrDefaultAsync<Unit>(u => u.Id == unitId);
+            var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId);
             var user = await _utilityService.GetUser();
-            if (user.Bananas < unit.BananaCost)
-            {
-                return BadRequest("Not enough bananas!");
-            }
+            if (user.Bananas < unit.BananaCost) return BadRequest("Not enough bananas!");
 
             user.Bananas -= unit.BananaCost;
 
-            UserUnit newUserUnit = new UserUnit
+            var newUserUnit = new UserUnit
             {
                 UnitId = unit.Id,
                 UserId = user.Id,
@@ -73,22 +68,18 @@ namespace BlazorBattles.Server.Controllers
                 .Include(unit => unit.Unit)
                 .ToListAsync();
 
-            int bananaCost = 1000;
+            var bananaCost = 1000;
 
             if (user.Bananas < bananaCost)
-            {
                 return BadRequest($"Not enough bananas! You need {bananaCost} bananas to revive your army.");
-            }
 
-            bool armyAlreadyAlive = true;
+            var armyAlreadyAlive = true;
             foreach (var userUnit in userUnits)
-            {
                 if (userUnit.HitPoints <= 0)
                 {
                     armyAlreadyAlive = false;
                     userUnit.HitPoints = new Random().Next(1, userUnit.Unit.HitPoints);
                 }
-            }
 
             if (armyAlreadyAlive)
                 return Ok("Your army is already alive.");
