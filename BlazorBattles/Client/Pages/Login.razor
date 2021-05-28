@@ -1,0 +1,38 @@
+﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+@inject BlazorBattles.Client.Services.IAuthService AuthService
+@inject IToastService ToastService
+Please log in below or <NavLink href="register">register</NavLink> for a new account.
+
+<EditForm Model="@user" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="email">Email</label>
+        <InputText id="email" @bind-Value="user.Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <InputText id="password" @bind-Value="user.Password" type="password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+    <ValidationSummary />
+</EditForm>
+
+@code {
+    private BlazorBattles.Shared.UserLogin user = new BlazorBattles.Shared.UserLogin();
+
+    private async void HandleLogin()
+    {
+        var result = await AuthService.Login(user);
+        if (result.Success)
+        {
+            await LocalStorage.SetItemAsync<string>("authToken", result.Data);
+            await AuthStateProvider.GetAuthenticationStateAsync();
+        }
+        else
+        {
+            ToastService.ShowError(result.Message);
+        }
+
+    }
+}

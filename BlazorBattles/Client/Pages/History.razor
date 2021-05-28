@@ -1,0 +1,45 @@
+﻿@page "/history"
+@inject BlazorBattles.Client.Services.IBattleService BattleService
+
+<h3>History</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Attacker</th>
+            <th>Opponent</th>
+            <th>Rounds</th>
+            <th>Damage</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var battle in BattleService.History)
+        {
+            <tr style="@GetHistoryStyle(battle)">
+                <td>@battle.BattleDate</td>
+                <td>@battle.AttackerName</td>
+                <td>@battle.OpponentName</td>
+                <td>@battle.RoundsFought</td>
+                <td>@battle.WinnerDamageDealt</td>
+                <td>@(battle.YouWon ? "You won!" : "You lost!")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await BattleService.GetHistory();
+    }
+
+    string GetHistoryStyle(BlazorBattles.Shared.BattleHistoryEntry entry)
+    {
+        if (entry.YouWon)
+            return "color: green; font-weight: 600";
+        else
+            return string.Empty;
+    }
+}

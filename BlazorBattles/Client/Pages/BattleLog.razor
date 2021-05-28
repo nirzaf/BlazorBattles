@@ -1,0 +1,22 @@
+﻿@page "/battlelog"
+@inject BlazorBattles.Client.Services.IBattleService BattleService
+
+<h3>Battle Log</h3>
+
+<ul class="list-group">
+    @foreach (var round in BattleService.LastBattle.Log)
+    {
+        <li class="@GetClass(round)">@round</li>
+    }
+</ul>
+
+@code {
+
+    string GetClass(string round)
+    {
+        if (round.Contains("kills"))
+            return "list-group-item list-group-item-danger";
+        else
+            return "list-group-item";
+    }
+}
